@@ -1,6 +1,8 @@
 const express = require('express');
 const mongoose = require('mongoose');
-require('dotenv').config()
+require('dotenv').config();
+
+const userRoutes = require('./routes/user');
 
 const app = express();
 
@@ -23,8 +25,10 @@ app.use((req, res, next) => {
 
 app.use(express.json());
 
-app.use((req, res) => {
-  res.json({ message: 'Hello from the web server!' })
-});
+// app.use((req, res) => {
+//   res.json({ message: 'Hello from the web server!' })
+// });
+
+app.use('/api/auth', userRoutes);
 
 module.exports = app;
