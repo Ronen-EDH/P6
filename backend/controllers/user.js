@@ -38,11 +38,12 @@ exports.login = (req, res, next) => {
         .compare(req.body.password, user.password)
         .then((valid) => {
           if (!valid) {
+            // const message = new Error("Invalid password");
             return res.status(401).json({
               // Why this format when on the network tab it gives this: {"error":{}}
-              error: new Error("Invalid password"),
+              // error: new Error("Invalid password")
               // This seems like to work better giving the following in the network tab: {"error":"Invalid password"}
-              // error: "Invalid password",
+              error: "Invalid password",
             });
           }
           const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET_KEY, { expiresIn: "24H" });

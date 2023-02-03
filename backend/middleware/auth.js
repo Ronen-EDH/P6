@@ -6,15 +6,12 @@ module.exports = (req, res, next) => {
     const authHeader = req.headers.authorization;
     const token = authHeader && authHeader.split(" ")[1];
     if (token == null) return res.status(401);
-    console.log("token:", token);
+    // console.log("token:", token);
     decodedToken = jwt.verify(token, process.env.JWT_SECRET_KEY);
-    userId = decodedToken.userId;
-    console.log("User ID:", userId);
-    if (req.body.userId && req.body.userId !== userId) {
-      throw "Invalid user ID";
-    } else {
-      next();
-    }
+    // console.log("User ID:", userId);
+    // console.log("req.body.userId", req.body.userId);
+    req.auth = decodedToken;
+    next();
   } catch {
     res.status(401).json({
       error: new Error("Invalid request"),
