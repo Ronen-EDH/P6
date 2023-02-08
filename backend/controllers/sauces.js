@@ -69,15 +69,11 @@ exports.addSauce = (req, res, next) => {
 };
 
 exports.getSingleSauces = (req, res, next) => {
-  // console.log(req.params);
   Sauce.findOne({
     _id: req.params.id,
   })
     .then((sauces) => {
       res.status(200).json(sauces);
-      // console.log(sauces.imageUrl);
-      // const filename = sauces.imageUrl.split("/assets/")[1];
-      // console.log(filename);
     })
     .catch((error) => {
       res.status(400).json({
@@ -87,8 +83,12 @@ exports.getSingleSauces = (req, res, next) => {
 };
 
 exports.modifySauce = (req, res, next) => {
+  // if (req.body.mimeTypeValidation === false) return res.status(400).json({ message: "Not a valid file extension" });
+  if (req.fileValidationError) {
+    return res.status(400).json({ message: req.fileValidationError });
+  }
+  console.log("modifySauce runs");
   let sauce = new Sauce({ _id: req.params._id });
-  // console.log("name", nameOfFile);
   if (req.file) {
     Sauce.findOne({
       _id: req.params.id,
@@ -106,35 +106,26 @@ exports.modifySauce = (req, res, next) => {
       });
     const url = req.protocol + "://" + req.get("host");
     req.body.sauce = JSON.parse(req.body.sauce);
-    // console.log("req.params", req.params);
-    sauce = {
-      _id: req.params._id,
-      name: req.body.sauce.name,
-      manufacturer: req.body.sauce.manufacturer,
-      description: req.body.sauce.description,
-      heat: req.body.sauce.heat,
-      mainPepper: req.body.sauce.mainPepper,
-      imageUrl: url + "/assets/" + req.file.filename,
-      dislikes: 0,
-      likes: 0,
-      usersLiked: [],
-      usersDisliked: [],
-    };
+    req.body.sauce.imageUrl = url + "/assets/" + req.file.filename;
   } else {
-    sauce = {
-      _id: req.params._id,
-      name: req.body.name,
-      manufacturer: req.body.manufacturer,
-      description: req.body.description,
-      heat: req.body.heat,
-      mainPepper: req.body.mainPepper,
-      imageUrl: req.body.imageUrl,
-      dislikes: 0,
-      likes: 0,
-      usersLiked: [],
-      usersDisliked: [],
-    };
+    // console.log("req.body:", req.body);
+    req.body.sauce = req.body;
+    // console.log("req.body.sauce:", req.body.sauce);
   }
+  sauce = {
+    _id: req.params._id,
+    name: req.body.sauce.name,
+    manufacturer: req.body.sauce.manufacturer,
+    description: req.body.sauce.description,
+    heat: req.body.sauce.heat,
+    mainPepper: req.body.sauce.mainPepper,
+    imageUrl: req.body.sauce.imageUrl,
+    dislikes: 0,
+    likes: 0,
+    usersLiked: [],
+    usersDisliked: [],
+  };
+
   // console.log("Id", req.body);
   // req.body.sauce = JSON.parse(req.body.sauce);
   Sauce.updateOne({ _id: req.params.id }, sauce)
@@ -207,7 +198,47 @@ exports.likeDislikeSauce = (req, res, next) => {
       // console.log("req.body for likes&dislikes :", req.body);
       // console.log(sauce);
       // console.log(likeFound);
+
+      /* function removeVote(usersVoted, votes, message) {
+        const index = usersVoted.indexOf(req.body.userId);
+        if (index > -1) {
+          usersVoted.splice(index, 1);
+          console.log("votes before:", votes);
+          votes -= 1;
+          return votes;
+          // console.log("votes after:", votes);
+          //This is weird save() doesn't seem to work but the error msg response comes through like it does...
+          sauce
+            .save()
+            .then(() => {
+              res.status(200).json({
+                message: message,
+              });
+            })
+            .catch((error) => {
+              res.status(400).json({
+                error: error,
+              });
+            });
+        }
+      } */
+      // Should I write a function/callback with parameters instead this 2 very similar cases?
       if (likeFound) {
+        /*         sauce.likes = removeVote(sauce.usersLiked, sauce.likes, "Like removed!"); */
+        // console.log("likes after save:", sauce.likes);
+        /*         sauce
+          .save()
+          .then(() => {
+            res.status(200).json({
+              message: message,
+            });
+          })
+          .catch((error) => {
+            res.status(400).json({
+              error: error,
+            });
+          });
+        console.log("likes after save:", sauce.likes); */
         const index = sauce.usersLiked.indexOf(req.body.userId);
         if (index > -1) {
           sauce.usersLiked.splice(index, 1);
@@ -228,6 +259,7 @@ exports.likeDislikeSauce = (req, res, next) => {
         }
       }
       if (dislikeFound) {
+        /*    removeVote(sauce.usersDisliked, sauce.dislikes, "Dislike removed!"); */
         const index = sauce.usersDisliked.indexOf(req.body.userId);
         if (index > -1) {
           sauce.usersDisliked.splice(index, 1);
