@@ -5,17 +5,15 @@ module.exports = (req, res, next) => {
   try {
     const authHeader = req.headers.authorization;
     const token = authHeader && authHeader.split(" ")[1];
-    if (token == null) return res.status(401);
-    // console.log("token:", token);
+    // Maybe this line is useless? If no token it seem it goes to line 13
+    // if (token == null) return res.status(401).json({ message: "Authentication failed!" });
     decodedToken = jwt.verify(token, process.env.JWT_SECRET_KEY);
-    // console.log("User ID:", userId);
-    // console.log("req.body.userId", req.body.userId);
-    // console.log("decodedToken:", decodedToken);
-    req.auth = decodedToken;
+    // const error = { message: "Invalid request"}
     next();
   } catch {
     res.status(401).json({
-      error: new Error("Invalid request"),
+      // error: new Error("Invalid request"),
+      error: "Invalid request",
     });
   }
 };

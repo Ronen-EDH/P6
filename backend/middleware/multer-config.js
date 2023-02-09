@@ -17,8 +17,6 @@ const storage = multer.diskStorage({
       .join("_")
       .split(/.(?=[^.]+$)/)[0];
     const extension = MIME_TYPE[file.mimetype];
-    // req.body.mimeTypeValidation = true;
-    // if (!extension) req.body.mimeTypeValidation = false;
     cb(null, name + Date.now() + "." + extension);
   },
 });
@@ -27,7 +25,6 @@ const upload = multer({
   storage: storage,
   fileFilter: function (req, file, cb) {
     const extension = MIME_TYPE[file.mimetype];
-    // console.log("extension:", extension);
     if (!extension) {
       req.fileValidationError = "Fileupload error, invalid file extension";
       // I don't think this part, I mean the new Error runs, or just not sure where...
@@ -37,5 +34,4 @@ const upload = multer({
   },
 }).single("image");
 
-// module.exports = multer({ storage: storage }).single("image");
 module.exports = upload;
