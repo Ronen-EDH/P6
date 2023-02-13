@@ -30,6 +30,9 @@ exports.getAllSauces = (req, res, next) => {
 };
 
 exports.addSauce = (req, res, next) => {
+  if (req.fileValidationError) {
+    return res.status(400).json({ message: req.fileValidationError });
+  }
   req.body.sauce = JSON.parse(req.body.sauce);
   const url = req.protocol + "://" + req.get("host");
   const sauce = new Sauce({
@@ -164,42 +167,48 @@ exports.deleteSauce = (req, res, next) => {
  *  If user already voted remove the vote and the userId from their appropriate groups,
  *  then update the database. */
 exports.likeDislikeSauce = (req, res, next) => {
-  Sauce.findOne({ _id: req.params.id }).then((sauce) => {
-    const likeFound = sauce.usersLiked.find((element) => element === req.body.userId);
-    const dislikeFound = sauce.usersDisliked.find((element) => element === req.body.userId);
+  Sauce.findOne({ _id: req.params.id })
+    .then((sauce) => {
+      const likeFound = sauce.usersLiked.find((element) => element === req.body.userId);
+      const dislikeFound = sauce.usersDisliked.find((element) => element === req.body.userId);
 
-    if (req.body.like === 1) {
-      sauce.usersLiked.push(req.body.userId);
-      sauce.likes += 1;
-      saveToDatabase(sauce, res, "Like added!");
-    }
+      if (req.body.like === 1) {
+        sauce.usersLiked.push(req.body.userId);
+        sauce.likes += 1;
+        saveToDatabase(sauce, res, "Like added!");
+      }
 
-    if (req.body.like === -1) {
-      sauce.usersDisliked.push(req.body.userId);
-      sauce.dislikes += 1;
-      saveToDatabase(sauce, res, "Dislike added!");
-    }
+      if (req.body.like === -1) {
+        sauce.usersDisliked.push(req.body.userId);
+        sauce.dislikes += 1;
+        saveToDatabase(sauce, res, "Dislike added!");
+      }
 
-    if (req.body.like === 0) {
-      function removeVote(usersVoted, votes) {
-        const index = usersVoted.indexOf(req.body.userId);
-        if (index > -1) {
-          usersVoted.splice(index, 1);
-          votes -= 1;
-          return votes;
+      if (req.body.like === 0) {
+        function removeVote(usersVoted, votes) {
+          const index = usersVoted.indexOf(req.body.userId);
+          if (index > -1) {
+            usersVoted.splice(index, 1);
+            votes -= 1;
+            return votes;
+          }
+        }
+
+        if (likeFound) {
+          const votesReturned = removeVote(sauce.usersLiked, sauce.likes);
+          sauce.likes = votesReturned;
+          saveToDatabase(sauce, res, "Like removed!");
+        }
+        if (dislikeFound) {
+          const votesReturned = removeVote(sauce.usersDisliked, sauce.dislikes);
+          sauce.dislikes = votesReturned;
+          saveToDatabase(sauce, res, "Dislike removed!");
         }
       }
-
-      if (likeFound) {
-        const votesReturned = removeVote(sauce.usersLiked, sauce.likes);
-        sauce.likes = votesReturned;
-        saveToDatabase(sauce, res, "Like removed!");
-      }
-      if (dislikeFound) {
-        const votesReturned = removeVote(sauce.usersDisliked, sauce.dislikes);
-        sauce.dislikes = votesReturned;
-        saveToDatabase(sauce, res, "Dislike removed!");
-      }
-    }
-  });
+    })
+    .catch((error) => {
+      res.status(400).json({
+        error: error,
+      });
+    });
 };
