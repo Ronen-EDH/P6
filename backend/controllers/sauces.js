@@ -12,7 +12,7 @@ function saveToDatabase(sauce, res, message) {
     })
     .catch((error) => {
       res.status(400).json({
-        error: error,
+        error: error.message,
       });
     });
 }
@@ -24,7 +24,7 @@ exports.getAllSauces = (req, res, next) => {
     })
     .catch((error) => {
       res.status(400).json({
-        error: error,
+        error: error.message,
       });
     });
 };
@@ -46,19 +46,7 @@ exports.addSauce = (req, res, next) => {
     likes: 0,
     userId: req.auth.userId,
   });
-  saveToDatabase(sauce, res, "Post saved successfully!");
-  /*   sauce
-    .save()
-    .then(() => {
-      res.status(201).json({
-        message: "Post saved successfully!",
-      });
-    })
-    .catch((error) => {
-      res.status(400).json({
-        error: error,
-      });
-    }); */
+  saveToDatabase(sauce, res, "Sauce saved successfully!");
 };
 
 exports.getSingleSauces = (req, res, next) => {
@@ -70,7 +58,7 @@ exports.getSingleSauces = (req, res, next) => {
     })
     .catch((error) => {
       res.status(400).json({
-        error: error,
+        error: error.message,
       });
     });
 };
@@ -82,7 +70,6 @@ exports.modifySauce = (req, res, next) => {
   if (req.fileValidationError) {
     return res.status(400).json({ message: req.fileValidationError });
   }
-  // console.log("modifySauce runs");
   let sauce = new Sauce({ _id: req.params._id });
   if (req.file) {
     Sauce.findOne({
@@ -96,7 +83,7 @@ exports.modifySauce = (req, res, next) => {
       })
       .catch((error) => {
         res.status(400).json({
-          error: error,
+          error: error.message,
         });
       });
     const url = req.protocol + "://" + req.get("host");
@@ -127,7 +114,7 @@ exports.modifySauce = (req, res, next) => {
     })
     .catch((error) => {
       res.status(400).json({
-        error: error,
+        error: error.message,
       });
     });
 };
@@ -136,7 +123,6 @@ exports.modifySauce = (req, res, next) => {
  *  Finding the selected sauce in the database by the URL parameter.
  *  Delete the image from the directory and then delete the sauce from the database. */
 exports.deleteSauce = (req, res, next) => {
-  // why "_id: req.params.id" and not just "req.params.id" ?
   Sauce.findOne({ _id: req.params.id })
     .then((sauce) => {
       const filename = sauce.imageUrl.split("/assets/")[1];
@@ -144,19 +130,19 @@ exports.deleteSauce = (req, res, next) => {
         Sauce.deleteOne({ _id: req.params.id })
           .then(() => {
             res.status(201).json({
-              message: "Deleted!",
+              message: "Sauce deleted!",
             });
           })
           .catch((error) => {
             res.status(400).json({
-              error: error,
+              error: error.message,
             });
           });
       });
     })
     .catch((error) => {
       res.status(400).json({
-        error: error,
+        error: error.message,
       });
     });
 };
@@ -208,7 +194,7 @@ exports.likeDislikeSauce = (req, res, next) => {
     })
     .catch((error) => {
       res.status(400).json({
-        error: error,
+        error: error.message,
       });
     });
 };

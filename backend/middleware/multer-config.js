@@ -27,8 +27,7 @@ const upload = multer({
     const extension = MIME_TYPE[file.mimetype];
     if (!extension) {
       req.fileValidationError = "Fileupload error, invalid file extension";
-      // I don't think this part, I mean the new Error runs, or just not sure where...
-      return cb(null, false, new Error("Fileupload error, invalid file extension"));
+      return cb(null, false);
     }
     cb(null, true);
   },
