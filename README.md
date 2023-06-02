@@ -34,11 +34,13 @@ JSON Web Token for user authentication and securing the sauce routes. Multer for
 ## Setup
 
 1. Clone the repo
-2. Open 2 terminals (Linux/Mac) or command prompts/PowerShell's (Windows) 
-3. Run npm install from both the backend and frontend folders
-5. Create a .env file in the backend directory. Inside the file you need to create 3 variables: MONGODB_User = "guest", MONGODB_PW = "dNalkvnl5NokIiVe" and
-JWT_SECRET_KEY = "y9rSfkZzMSON4wZd1oeM2d6FT07nQacQjg28eZcsdMlWIUCmqDxPFPFyjkGtDPN"
-6. Create an assets folder in the backend directory (../backend/assets/)
-7. Run "npm run watch" in the backend directory.
-8. Run "npm run start" in the frontend directory.
-9. Now all you need to do is CTRL + Left click on the live server that's just popped up (http://localhost:4200/) to access the web app
+2. Open a terminal (Linux/Mac) or command prompt/PowerShell (Windows)
+3. You'll need Node Package Manager for the next step so if you don't have it here is a link how to install it: https://docs.npmjs.com/downloading-and-installing-node-js-and-npm
+4. Navigate into the backend folder and from there run `npm install`
+5. Do steps 2 and 3 for the frontend folder as well
+6. Create a .env file in the backend directory. Inside the file you need to create 3 variables: `MONGODB_User = "guest"`, `MONGODB_PW = "dNalkvnl5NokIiVe"` and
+`JWT_SECRET_KEY = "y9rSfkZzMSON4wZd1oeM2d6FT07nQacQjg28eZcsdMlWIUCmqDxPFPFyjkGtDPN"`
+7. Create an assets folder in the backend directory (../backend/assets/)
+8. Run `npm run dev` in the backend directory
+11. Do steps 10 in the frontend directory
+10. Now all you need to do is open the http://localhost:4200/ address to access the web app
