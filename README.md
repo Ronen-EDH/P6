@@ -31,16 +31,16 @@ My task for this project was to build a RESTful API complementing the already de
 NodeJS for runtime with ExpressJS. MongoDB with Mongoose for database while storing data securely using Bcrypt. 
 JSON Web Token for user authentication and securing the sauce routes. Multer for file upload. Environment variables to practice uploading code securely.
 
-## Setup
+## Setup for Windows
 
 1. Clone the repo
-2. Open a terminal (Linux/Mac) or command prompt/PowerShell (Windows)
-3. You'll need Node Package Manager for the next step so if you don't have it here is a link how to install it: https://docs.npmjs.com/downloading-and-installing-node-js-and-npm
-4. Navigate into the backend folder and from there run `npm install`
-5. Do steps 2 and 3 for the frontend folder as well
+2. You'll need Node Package Manager for the next step so if you don't have it here is a link how to install it: https://docs.npmjs.com/downloading-and-installing-node-js-and-npm
+3. Here you can use Node.js Command Prompt or (my preferred way) follow this guide to make your npm commands globally available: https://dev.to/supritha/npm-is-not-recognized-as-internal-or-external-command-solution-o1n
+4. Using Node.js Command Prompt - or a normal Command Prompt/PowerShell if you did the second option -  navigate into the backend folder and from there run `npm install`
+5. Do step 4 for the frontend folder as well
 6. Create a .env file in the backend directory. Inside the file you need to create 3 variables: `MONGODB_User = "guest"`, `MONGODB_PW = "dNalkvnl5NokIiVe"` and
 `JWT_SECRET_KEY = "y9rSfkZzMSON4wZd1oeM2d6FT07nQacQjg28eZcsdMlWIUCmqDxPFPFyjkGtDPN"`
 7. Create an assets folder in the backend directory (../backend/assets/)
-8. Run `npm run dev` in the backend directory
-11. Do steps 10 in the frontend directory
+8. Same way as in step 4 run `npm run dev` in the backend directory
+9. Do steps 8 in the frontend directory
 10. Now all you need to do is open the http://localhost:4200/ address to access the web app
